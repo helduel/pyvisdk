@@ -78,7 +78,7 @@ version         ~                Displays script version information, if availab
 from optparse import OptionParser
 from pyvisdk import Vim
 import sys, logging
-from options import Options
+from .options import Options
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -123,7 +123,7 @@ class PyvisdkApp(object):
             
         # update our options with what was entered on the command line.  This will override previously
         # entered options
-        for name, value in cmd_opts.__dict__.items():
+        for name, value in list(cmd_opts.__dict__.items()):
             if value:
                 self.options.update({name:value})
         

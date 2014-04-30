@@ -10,12 +10,12 @@
 # To handle this we need to tunnel all our traffic through the proxy server
 # when talking to vCenter.
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import suds.client
 
-class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
+class HTTPSClientAuthHandler(urllib.request.HTTPSHandler):
     def __init__(self, key, cert):
-        urllib2.HTTPSHandler.__init__(self)
+        urllib.request.HTTPSHandler.__init__(self)
         self.key = key
         self.cert = cert
 
@@ -26,7 +26,7 @@ class HTTPSClientAuthHandler(urllib2.HTTPSHandler):
         return self.do_open(self.getConnection, req)
 
     def getConnection(self, host, timeout=300):
-        from httplib import HTTPSConnection
+        from http.client import HTTPSConnection
         return HTTPSConnection(host, key_file=self.key, cert_file=self.cert)
 
 class HttpAuthenticated(suds.client.HttpAuthenticated):
@@ -39,7 +39,7 @@ class HttpAuthenticated(suds.client.HttpAuthenticated):
     def u2handlers(self):
         handlers = suds.client.HttpAuthenticated.u2handlers(self)
         if self._certfile and self._keyfile:
-            handlers.append(urllib2.ProxyHandler({'https':self._proxy}))
+            handlers.append(urllib.request.ProxyHandler({'https':self._proxy}))
             handlers.append(HTTPSClientAuthHandler(self._keyfile,
                                                    self._certfile))
         return handlers

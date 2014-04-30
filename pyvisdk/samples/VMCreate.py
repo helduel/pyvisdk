@@ -111,10 +111,10 @@ class VMCreate(PyvisdkApp):
 
         power_info = VirtualMachineDefaultPowerOpInfo(self.vim, powerOffType="preset", suspendType="preset", resetType="preset", standbyAction="powerOnSuspend")
         
-        print "name: ", self.options.vmname, type(self.options.vmname)
-        print "memory: ", self.options.memory, type(self.options.memory)
-        print "cpus: ", self.options.cpucount, type(self.options.cpucount)
-        print "Creating %s with %dMB of memory and %d CPUs." % (self.options.vmname, self.options.memory, self.options.cpucount)
+        print("name: ", self.options.vmname, type(self.options.vmname))
+        print("memory: ", self.options.memory, type(self.options.memory))
+        print("cpus: ", self.options.cpucount, type(self.options.cpucount))
+        print("Creating %s with %dMB of memory and %d CPUs." % (self.options.vmname, self.options.memory, self.options.cpucount))
         
         vmspec = VirtualMachineConfigSpec(self.vim, 
             name = self.options.vmname,

@@ -98,7 +98,7 @@ class BaseEntity(object):
         self._name = name
 
     def update(self, prop):
-        if type(prop) == types.ListType:
+        if type(prop) == list:
             for x in prop:
                 self.update(x)
 

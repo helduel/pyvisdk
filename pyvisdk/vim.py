@@ -87,16 +87,16 @@ class Vim(pyvisdk.core.VimBase):
         """
         Display version information about the vmware server and library
         """
-        print "=" * 40
-        print "Connected to %s" % self.server
-        print "  %s" % self.service_content.about.fullName
-        print "  OS: %s" % self.service_content.about.osType
-        print "  License: %s %s" % (
-                self.service_content.about.licenseProductName, self.service_content.about.licenseProductVersion)
-        print "  Current Sessions: "
+        print("=" * 40)
+        print("Connected to %s" % self.server)
+        print("  %s" % self.service_content.about.fullName)
+        print("  OS: %s" % self.service_content.about.osType)
+        print("  License: %s %s" % (
+                self.service_content.about.licenseProductName, self.service_content.about.licenseProductVersion))
+        print("  Current Sessions: ")
         for session in self.session_manager.sessionList:
-            print "%-30s %-20s Last Active: %-20s Logged In: %-20s" % ("%s(%s)" % (session.fullName, session.userName), session.key, session.lastActiveType, session.loginTime)
-        print "=" * 40
+            print("%-30s %-20s Last Active: %-20s Logged In: %-20s" % ("%s(%s)" % (session.fullName, session.userName), session.key, session.lastActiveType, session.loginTime))
+        print("=" * 40)
 
     def getApiType(self):
         """

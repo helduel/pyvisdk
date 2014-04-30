@@ -102,10 +102,9 @@ class CachedPropertyCollector(object):
     def _mergeObjectUpdateIntoCache__enter(self, object_ref_key, objectUpdate):
         # Rebuild the properties dict
         properties = {propertyChange.name:propertyChange.val
-                      for propertyChange in filter(lambda propertyChange:propertyChange.op in ['add', 'assign'],
-                                                   objectUpdate.changeSet)}
+                      for propertyChange in [propertyChange for propertyChange in objectUpdate.changeSet if propertyChange.op in ['add', 'assign']]}
         message = "Replacing cache for object_ref_key {} with a dictionary of the following keys {}"
-        logger.debug(message.format(object_ref_key, properties.keys()))
+        logger.debug(message.format(object_ref_key, list(properties.keys())))
         self._result[object_ref_key] = properties
 
     def _mergeObjectUpdateIntoCache__leave(self, object_ref_key, objectUpdate=None):
@@ -128,7 +127,7 @@ class CachedPropertyCollector(object):
         return matches
 
     def _get_list_and_object_to_update(self, property_dict, path, value, last=False):
-        for key in property_dict.keys():
+        for key in list(property_dict.keys()):
             if path.startswith(key):
                 break
         # key is a prefix of path
@@ -148,7 +147,7 @@ class CachedPropertyCollector(object):
         return object_to_update
         
     def _get_property_name_to_update(self, property_dict, path):
-        for key in property_dict.keys():
+        for key in list(property_dict.keys()):
             if path == key:
                 return key
         return self._walk_on_property_path(path)[-1].value
@@ -207,7 +206,7 @@ class CachedPropertyCollector(object):
         # http://vijava.sourceforge.net/vSphereAPIDoc/ver5/ReferenceGuide/vmodl.query.PropertyCollector.UpdateSet.html
         # http://vijava.sourceforge.net/vSphereAPIDoc/ver5/ReferenceGuide/vmodl.query.PropertyCollector.FilterUpdate.html
         for filterSet in update.filterSet:
-            for key in map(lambda missingObject: self._refToString(missingObject.obj), filterSet.missingSet):
+            for key in [self._refToString(missingObject.obj) for missingObject in filterSet.missingSet]:
                 logger.debug("Removing key {} from cache because it is missing in the filterSet".format(key))
                 _ = self._result.pop(key, None)
             for objectUpdate in filterSet.objectSet:

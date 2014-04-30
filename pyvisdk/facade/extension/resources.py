@@ -20,7 +20,7 @@ class ExtensionResourceDict(object, DictMixin):
             self._install_custom_field()
 
     def keys(self):
-        return self._get_dict().keys()
+        return list(self._get_dict().keys())
 
     def __getitem__(self, key):
         return self._get_dict()[key]

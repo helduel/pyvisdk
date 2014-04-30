@@ -28,7 +28,7 @@ def AllVirtualMachinesLicensedEvent(vim, *args, **kwargs):
     for name, arg in zip(required+optional, args):
         setattr(obj, name, arg)
 
-    for name, value in kwargs.items():
+    for name, value in list(kwargs.items()):
         if name in required + optional:
             setattr(obj, name, value)
         else:

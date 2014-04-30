@@ -46,7 +46,7 @@ class TaskManager(object):
             task_managed_object = self._managed_object.CreateTask(**kwargs).task
         except:
             logger.exception("Failed to create task")
-            raise CreateTaskException, None, exc_info()[-1]
+            raise CreateTaskException.with_traceback(exc_info()[-1])
         return task_managed_object
 
 class Task(object):
@@ -83,7 +83,7 @@ class Task(object):
         state = 'success' if (exc_type, exc_val, exc_tb) == (None, None, None) else 'error'
         self._managed_object.SetTaskState(state, None, None)
         if state != 'success':
-            raise exc_type, exc_val, exc_tb
+            raise exc_type(exc_val).with_traceback(exc_tb)
 
     def get_name(self):
         data_object = self._get_info()

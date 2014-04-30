@@ -35,7 +35,7 @@ class ExtensionFacade(object):
     # Tasks management
 
     def is_task_registered(self, task_name):
-        return task_name in self._get_tasks().values()
+        return task_name in list(self._get_tasks().values())
 
     def get_task_id(self, task_name):
         if not self.is_registered():
@@ -43,7 +43,7 @@ class ExtensionFacade(object):
         if not self.is_task_registered(task_name):
             raise KeyError(task_name)
         tasks = self._get_tasks()
-        reverted = {value:key for key, value in tasks.items()}
+        reverted = {value:key for key, value in list(tasks.items())}
         return reverted[task_name]
 
     def register_task(self, task_name):
@@ -77,8 +77,8 @@ class ExtensionFacade(object):
         extension = self._get_extensions_data_objects()[0]
         tasks = self._get_tasks()
         tasks[task_id] = task_name
-        extension.taskList = [self._new_task_type_info(task_id) for task_id in tasks.keys()]
-        task_resources = [("{}.label".format(key), value) for key, value in tasks.items()]
+        extension.taskList = [self._new_task_type_info(task_id) for task_id in list(tasks.keys())]
+        task_resources = [("{}.label".format(key), value) for key, value in list(tasks.items())]
         # TODO events
         extension.resourceList = [self._new_task_extension_resource_info('en', 'task', task_resources)]
         self._managed_object.UpdateExtension(extension)

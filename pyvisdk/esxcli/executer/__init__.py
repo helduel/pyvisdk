@@ -27,8 +27,8 @@ def unmarshall_object(vim, obj):
 def get_xml_from_value(vim, key, value):
     from lxml import etree
     import types
-    BASIC_TYPES = (types.BooleanType, types.FloatType, types.IntType,
-                   types.LongType, types.StringType, types.UnicodeType)
+    BASIC_TYPES = (bool, float, int,
+                   int, bytes, str)
     if isinstance(value, BASIC_TYPES):
         element = etree.Element(key)
         element.text = str(value)
@@ -39,7 +39,7 @@ def get_xml_from_value(vim, key, value):
 
 def generate_arguments(vim, **kwargs):
     from pyvisdk.do.reflect_managed_method_executer_soap_argument import ReflectManagedMethodExecuterSoapArgument
-    sorted_keys = kwargs.keys()
+    sorted_keys = list(kwargs.keys())
     sorted_keys.sort()
     sorted_kwargs = [(key, kwargs[key]) for key in sorted_keys]
     return [ReflectManagedMethodExecuterSoapArgument(vim, key, escape(get_xml_from_value(vim, key, value)))

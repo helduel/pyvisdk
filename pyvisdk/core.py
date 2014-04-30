@@ -6,7 +6,7 @@ Created on Feb 15, 2011
 from suds.sudsobject import Property
 import types, time
 import logging
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import lxml.etree as etree
 
 from .base.base_entity import ManagedObjectReference, BaseEntity
@@ -93,7 +93,7 @@ class VimBase(object):
                 if child.tag == "name":
                     return child.text
 
-        url = urllib2.urlopen("https://" + self.server + "/sdk/vimServiceVersions.xml")
+        url = urllib.request.urlopen("https://" + self.server + "/sdk/vimServiceVersions.xml")
         root = etree.fromstring(url.read())
         names = root.findall(".//namespace")
         for namesp in names:
@@ -179,7 +179,7 @@ class VimBase(object):
             for obj in obj_content:
                 rv.append(self._parse_object_content(obj, parent))
 
-        elif type(obj_content) == types.NoneType:
+        elif type(obj_content) == type(None):
             return obj_content
 
         elif issubclass(obj_content.__class__, BaseEntity):
@@ -249,7 +249,7 @@ class VimBase(object):
         do = import_string('%s.%s' % (mod_name, class_name))
 
         kwargs = {}
-        for attr_name in filter(lambda x: not x.startswith('_'), dir(obj_content)):
+        for attr_name in [x for x in dir(obj_content) if not x.startswith('_')]:
             attr_data = getattr(obj_content, attr_name)
             kwargs[attr_name] = self._parse_object_content(attr_data, parent=do)
 

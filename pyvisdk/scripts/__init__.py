@@ -21,7 +21,7 @@ def main():
                           help='Password (default is blank)')
         (options, args) = parser.parse_args()
         if options.server is None:
-            print 'You must specify a server to connect to.  Use --help for usage'
+            print('You must specify a server to connect to.  Use --help for usage')
             sys.exit(1)
         if options.username is None:
             options.username = 'root'
@@ -29,7 +29,7 @@ def main():
             options.password = ''
 
 
-        print "Connecting to " + options.server
+        print("Connecting to " + options.server)
         vim = Vim(options.server, verbose=3)
         vim.login(options.username, options.password)
 
@@ -37,14 +37,14 @@ def main():
         for ref in vms:
             name = ref.propSet[0].val
             power = ref.propSet[1].val
-            print "%-20s %s" % (name, power)
+            print("%-20s %s" % (name, power))
 
             vm = vim.getVirtualMachine(name)
             sname = vm.createSnapshot()
-            print sname
+            print(sname)
 
             snap = vm.getSnapshotByName(sname)
-            print snap
+            print(snap)
             break
 
         vim.logout()

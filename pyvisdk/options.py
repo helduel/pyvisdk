@@ -68,7 +68,7 @@ class Options(object):
                 self._read()
 
     def load_env(self):
-        for var in os.environ.items():
+        for var in list(os.environ.items()):
            if var in vi_options:
                self.vals[var] = os.environ[var]
 
@@ -82,7 +82,7 @@ class Options(object):
     def save(self):
         if self.file_changed:
             outfile = open(self.filename, 'w')
-            for n, v in self.vals.items():
+            for n, v in list(self.vals.items()):
                 outfile.writeline("%s=%s" % (n, v))
             outfile.close()
 

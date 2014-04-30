@@ -127,7 +127,7 @@ class Generator(Base):
             if data_type.startswith(basic_type):
                 return "xsd:{}".format(basic_type)
         type_name = data_type.replace('[]', '')
-        matching_cli_type = filter(lambda item: item.name == type_name, self._get_types().dataTypeInfo)
+        matching_cli_type = [item for item in self._get_types().dataTypeInfo if item.name == type_name]
         if matching_cli_type:
             return "vim25:{}".format(matching_cli_type[0].wsdlName)
         return "vim25:{}".format(type_name.replace('vim.', ''))
@@ -210,8 +210,8 @@ class Generator(Base):
             return "{}={}".format(param_type_info.name, 'None') if is_optional(param_type_info) else \
                     param_type_info.name
 
-        return ', '.join(['self'] + map(formatter, filter(lambda item: not is_optional(item), param_type_info_list) +
-                                        filter(lambda item: is_optional(item), param_type_info_list)))
+        return ', '.join(['self'] + list(map(formatter, [item for item in param_type_info_list if not is_optional(item)] +
+                                        [item for item in param_type_info_list if is_optional(item)])))
 
     def _prepate_methods(self, managed_type_name, methods_dict, cli_info, handler_name):
         from bunch import Bunch
@@ -221,7 +221,7 @@ class Generator(Base):
                                                      return_value=method.ret,
                                                      help=method.help)
         methods = []
-        for method in methods_dict.values():
+        for method in list(methods_dict.values()):
             kwargs = self._prepare_method_parameters(method.paramTypeInfo,
                                                      methods_in_cli_info.get(method.name)['parameters'])
             formatted_args = self.prepare_method_formatted_arugments(method.paramTypeInfo,
@@ -264,7 +264,7 @@ class Generator(Base):
         methods_by_managed_types = self._get_managed_types_dict()
         handler_names = self._get_handler_names_dict()
         handlers = {}
-        for managed_type_name, methods_dict in methods_by_managed_types.items():
+        for managed_type_name, methods_dict in list(methods_by_managed_types.items()):
             handler_name = handler_names.get(managed_type_name)
             if handler_name is None:
                 continue
@@ -278,7 +278,7 @@ class Generator(Base):
             makedirs(HANDLERS_DIR)
         with open(join(HANDLERS_DIR, '__init__.py'), 'w') as fd:
             fd.write(HANLDERS_IMPORT_METHOD)
-        for name, content in self.generate_cli_handlers().items():
+        for name, content in list(self.generate_cli_handlers().items()):
             self._write_handler_module_to_disk(name, content)
 
     @cached_method
@@ -310,6 +310,6 @@ class Generator(Base):
     def save_data_modules_to_disk(self):
         from pyvisdk.utils import camel_to_under
         self._write_data_object_types_file()
-        for name, content in self.generate_data_type_modules().items():
+        for name, content in list(self.generate_data_type_modules().items()):
             with open(join(DATA_MODULES_DIR, '{}.py'.format(camel_to_under(name))), 'w') as fd:
                 fd.write(content)
