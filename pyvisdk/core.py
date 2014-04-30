@@ -206,12 +206,7 @@ class VimBase(object):
         elif class_name in DataObjectTypes:
             rv = self._create_do_obj(class_name, obj_content, parent)
 
-        elif class_name == 'Text':
-            # obj_context is instance of suds.sax.text.Text which is a subclass of unicode
-            # we need to return the text in proper encoding
-            rv = str(obj_content.encode('UTF-8'))
-
-        elif class_name in ['long', 'bool', 'int', 'datetime', 'str']:
+        elif class_name in ['Text', 'long', 'bool', 'int', 'datetime', 'str']:
             return obj_content
 
         elif "ArrayOf" in class_name:
