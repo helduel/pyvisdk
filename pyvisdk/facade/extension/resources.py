@@ -1,7 +1,7 @@
 
 from UserDict import DictMixin
 from infi.pyutils.lazy import clear_cache, cached_method
-from cjson import encode, decode
+from json import dumps, loads
 
 MANAGED_OBJECT_REFERENCE = "Folder:group-d1"
 
@@ -36,10 +36,10 @@ class ExtensionResourceDict(object, DictMixin):
         self._set_dict(dictionary)
 
     def _get_dict(self):
-        return decode(self._get_json_string())
+        return loads(self._get_json_string())
 
     def _set_dict(self, dictionary):
-        self._set_json_string(encode(dictionary))
+        self._set_json_string(dumps(dictionary))
 
     @cached_method
     def _is_custom_field_installed(self):
@@ -56,7 +56,7 @@ class ExtensionResourceDict(object, DictMixin):
     @cached_method
     def _get_json_string(self):
         item = [item for item in self._managed_object.customValue if item.key == self._get_custom_field_key()]
-        return encode({}) if not item else item[0].value
+        return dumps({}) if not item else item[0].value
 
     def _set_json_string(self, json):
         self._manager.SetField(entity=self._managed_object, key=self._get_custom_field_key(), value=json)

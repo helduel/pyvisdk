@@ -22,7 +22,7 @@ from .enums.task_info_state import TaskInfoState
 from .exceptions import VisdkTaskError
 from .mo.service_instance import ServiceInstance
 from .utils import camel_to_under
-from brownie.importing import import_string
+from .brownie_importing import import_string
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)

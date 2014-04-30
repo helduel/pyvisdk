@@ -1,6 +1,6 @@
 from pyvisdk.base.managed_object_types import ManagedObjectTypes
 from pyvisdk.do.managed_object_reference import ManagedObjectReference
-from brownie.importing import import_string
+from pyvisdk.brownie_importing import import_string
 from pyvisdk.utils import camel_to_under
 
 import logging
